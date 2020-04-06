@@ -27,6 +27,10 @@ class ViewController: UIViewController {
 
     @IBAction func resultSelected(_ sender: UIButton) {
         
+        let ac = UIAlertController.init()
+        ac.addAction(UIAlertAction.init(title: "Did the water start to boil?", style: .default, handler: nil))
+        self.present(ac, animated: true, completion: nil)
+        
         timer.invalidate()
         let result = sender.currentTitle!
         totalTime = timesNeeded[result]!
