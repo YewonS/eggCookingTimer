@@ -27,21 +27,28 @@ class ViewController: UIViewController {
 
     @IBAction func resultSelected(_ sender: UIButton) {
         
-        let ac = UIAlertController.init()
-        ac.addAction(UIAlertAction.init(title: "Did the water start to boil?", style: .default, handler: nil))
-        self.present(ac, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Ready?", message: "Did the water start to boil?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { _ in
+            print("Cancelled.")
+        }))
         
-        timer.invalidate()
-        let result = sender.currentTitle!
-        totalTime = timesNeeded[result]!
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (_: UIAlertAction!) in
+            
+            self.timer.invalidate()
+            let result = sender.currentTitle!
+            self.totalTime = self.timesNeeded[result]!
+            
+            self.progressBar.setProgress(0.0, animated: true)
+            self.timesPassed = 0
+            self.titleLabel.text = result
+            
+            DispatchQueue.main.async{
+                self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateTimer), userInfo: nil, repeats: true)
+            }
+            
+        }))
         
-        progressBar.setProgress(0.0, animated: true)
-        timesPassed = 0
-        titleLabel.text = result
-        
-        DispatchQueue.main.async{
-            self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateTimer), userInfo: nil, repeats: true)
-        }
+        self.present(alert, animated: true, completion: nil)
         
     }
     
